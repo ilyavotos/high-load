@@ -18,7 +18,7 @@ export const updateBalance = async (req: Request, res: Response): Promise<any> =
       return res.status(400).json("This might be due to insufficient funds in your account.");
     }
 
-    res.status(200).json(balance);
+    res.status(200).json("The account balance has been changed");
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error updating balance", error });
