@@ -1,4 +1,5 @@
 import express, { urlencoded } from "express";
+import "express-async-errors";
 import dotenv from "dotenv";
 import { userRouter } from "@routes/user";
 import { sequelize } from "config/database";
