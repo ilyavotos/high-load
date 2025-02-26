@@ -2,6 +2,7 @@ import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import { userRouter } from "@routes/user";
 import { sequelize } from "config/database";
+import { errorHandler } from "@middlewares/error";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 })();
 
 app.use("/api/user", userRouter);
+app.use(errorHandler);
 
 process.on("SIGINT", async () => {
   await sequelize.close();

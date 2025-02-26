@@ -1,36 +1,35 @@
 import { User } from "@models/user";
-import { Op } from "sequelize";
+import { fn, Op } from "sequelize";
 import { UserUpdateBalance } from "@schemas/user";
+import { NextFunction, Request, Response } from "express";
 
-export const userList = async () => {
-  const users = await User.findAll();
-  return users;
+export const userList = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await User.findAll();
+    res.send(users);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const userUpdateBalance = async ({ userId, amount }: UserUpdateBalance) => {
-  const amountAbs = Math.abs(amount);
+export const updateBalance = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const { userId, amount }: UserUpdateBalance = req.body;
 
-  if (amount < 0) {
-    console.log("decrement");
-    const [[_, count]] = await User.decrement("balance", {
-      by: amountAbs,
+    const [[_, count]] = await User.increment("balance", {
+      by: amount,
       where: {
         id: userId,
-        balance: {
-          [Op.gte]: amountAbs,
-        },
+        ...(amount < 0 ? { balance: { [Op.gte]: fn("abs", amount) } } : {}),
       },
     });
-    return count;
-  }
 
-  if (amount > 0) {
-    console.log("increment");
-    const [[_, count]] = await User.increment("balance", {
-      by: amountAbs,
-      where: { id: userId },
-    });
-    return count;
+    if (!count) {
+      return res.status(400).json("This might be due to insufficient funds in your account.");
+    }
+
+    res.status(200).json("The account balance has been changed");
+  } catch (error) {
+    next(error);
   }
-  return null;
 };
