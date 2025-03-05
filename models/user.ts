@@ -1,16 +1,7 @@
-import {
-  DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
-  Model,
-} from "sequelize";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "@config/database";
 
-export interface UserModel
-  extends Model<
-    InferAttributes<UserModel>,
-    InferCreationAttributes<UserModel>
-  > {
+export interface UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
   id: number;
   balance: number;
 }
@@ -27,4 +18,4 @@ export const userModelAttributes = {
   },
 };
 
-export const User = sequelize.define<UserModel>("user", userModelAttributes);
+export const User = sequelize.define<UserModel>("user", userModelAttributes, { tableName: "users" });

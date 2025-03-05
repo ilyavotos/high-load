@@ -3,12 +3,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const { DB_NAME, DB_USER, DB_PASSWORD } = process.env;
+const { DATABASE_URL } = process.env;
 
-export const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-  dialect: "postgres",
-  host: "localhost",
-  port: 5432,
+export const sequelize = new Sequelize(DATABASE_URL, {
   define: {
     timestamps: false,
   },

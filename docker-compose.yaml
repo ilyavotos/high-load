@@ -1,0 +1,97 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  redis:
+    image: redis:latest
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/var/lib/redis_data/data
+  app1:
+    image: backend
+    build:
+      context: ./
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      REDIS_URL: redis://redis:6379/0
+      SERVER_NAME: app1
+      TZ: ${TZ}
+    ports:
+      - "3001:3000"
+    depends_on:
+      - postgres
+      - redis
+
+  app2:
+    image: backend
+    build:
+      context: ./
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      REDIS_URL: redis://redis:6379/0
+      SERVER_NAME: app2
+      TZ: ${TZ}
+    ports:
+      - "3002:3000"
+    depends_on:
+      - postgres
+      - redis
+  app3:
+    image: backend
+    build:
+      context: ./
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      REDIS_URL: redis://redis:6379/0
+      SERVER_NAME: app3
+      TZ: ${TZ}
+    ports:
+      - "3003:3000"
+    depends_on:
+      - postgres
+      - redis
+  app4:
+    image: backend
+    build:
+      context: ./
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      REDIS_URL: redis://redis:6379/0
+      SERVER_NAME: app4
+      TZ: ${TZ}
+    ports:
+      - "3004:3000"
+    depends_on:
+      - postgres
+      - redis
+  app5:
+    image: backend
+    build:
+      context: ./
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      REDIS_URL: redis://redis:6379/0
+      SERVER_NAME: app5
+      TZ: ${TZ}
+    ports:
+      - "3005:3000"
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  pg_data:
+  redis_data:

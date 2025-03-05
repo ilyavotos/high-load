@@ -1,8 +1,7 @@
-import dotenv from "dotenv";
 import { sequelize } from "config/database";
 import { SequelizeStorage, Umzug } from "umzug";
 
-dotenv.config();
+const { MIGRATE, SERVER_NAME } = process.env;
 
 const seeds = new Umzug({
   migrations: { glob: "seeds/*.ts" },
@@ -10,28 +9,21 @@ const seeds = new Umzug({
   storage: new SequelizeStorage({ sequelize }),
   logger: console,
 });
-const migrations = new Umzug({
-  migrations: { glob: "migrations/*.ts" },
-  context: sequelize.getQueryInterface(),
-  storage: new SequelizeStorage({ sequelize }),
-  logger: console,
-});
 
-(async () => {
+export const migrated = async () => {
   try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-    if (process.env.MIGRATE && process.env.MIGRATE === "up") {
+    await sequelize.sync({ alter: true });
+    if (MIGRATE === "up" && SERVER_NAME === "app1") {
       console.log("Migrate Up.");
-      await migrations.up();
-      await seeds.up();
+      if (process.env.SERVER_NAME === "app1") {
+        await seeds.up();
+      }
     }
-    if (process.env.MIGRATE && process.env.MIGRATE === "down") {
+    if (MIGRATE && MIGRATE === "down") {
       console.log("Migrate Down.");
-      await seeds.down();
-      await migrations.down();
+      await sequelize.drop();
     }
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error("Unable migrated:", error);
   }
-})();
+};

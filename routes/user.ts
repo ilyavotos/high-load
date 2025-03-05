@@ -1,11 +1,11 @@
 import express from "express";
-import { userList, updateBalance } from "@services/user";
 import { validateData } from "@middlewares/validation";
 import { userUpdateBalanceSchema } from "@schemas/user";
+import { getUsers, updateUserBalance } from "@controllers/user";
 
 const userRouter = express.Router();
 
-userRouter.get("/list", userList);
-userRouter.put("/update-balance", validateData(userUpdateBalanceSchema), updateBalance);
+userRouter.get("/list", getUsers);
+userRouter.put("/update-balance", validateData(userUpdateBalanceSchema), updateUserBalance);
 
 export { userRouter };
