@@ -8,7 +8,6 @@ const taskQueue = new Queue("taskQueue", { connection: redisClient });
 const worker = new Worker(
   "taskQueue",
   async (job) => {
-    console.log(job.id, job.data, process.env.SERVER_NAME);
     job.updateData({ ...job.data, server: process.env.SERVER_NAME });
     await sleep();
   },
