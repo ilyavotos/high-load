@@ -6,6 +6,8 @@ Default TZ='Europe/Moscow' for ap1 ap2 ap3 pa4 ap5
 
 This API allows for updating user balances and listing users in a high-load environment.
 
+- The creation of test tasks is located in the app.ts file.
+
 ### Init
 
 ```js
