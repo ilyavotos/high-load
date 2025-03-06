@@ -1,12 +1,13 @@
 # High Load API
 
-Default TZ='Europe/Moscow' for ap1 ap2 ap3 pa4 ap5
-
 ## Overview
 
 This API allows for updating user balances and listing users in a high-load environment.
 
+Stack: NodeJS, TS, Express, BullMq, Docker
+
 - The creation of test tasks is located in the app.ts file.
+- Default TZ='Europe/Moscow' for ap1 ap2 ap3 pa4 ap5
 
 ### Init
 
